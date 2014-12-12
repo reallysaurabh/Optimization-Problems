@@ -1,0 +1,188 @@
+import random
+from pulp import *
+
+######@@@@@@@@@@--Initializations and Declarations--@@@@@@@@@@###########
+
+#Supply limits
+#s1=[random.randint(30,35), random.randint(30,35), random.randint(30,35)]
+s1=random.randint(90,100)
+
+s2=random.randint(90, 100)
+
+s3=random.randint(90, 100)
+
+
+#Demand Limits
+d1=random.randint(90, 100)
+
+d2=random.randint(90, 100)
+
+d3=random.randint(90, 100)
+
+#Prices of products
+p1=random.randint(70,80)
+
+p2=random.randint(35,45)
+
+p3=random.randint(55,65)
+
+#Cost of production and processing
+c1=random.randint(50,60)
+
+c2=random.randint(15,25)
+
+c3=random.randint(35,45)
+
+#quality of blends and final products
+b1=random.random()
+
+b2=random.random()
+
+b3=random.random()
+
+q1=random.random()
+
+q2=random.random()
+
+q3=random.random()
+
+
+#Creating variables of flow from source to pool, with a lower limit of zero
+x11=LpVariable("x11",random.randint(0,33),None,LpInteger)
+
+x12=LpVariable("x12",random.randint(0,33),None,LpInteger)
+
+x13=LpVariable("x13",random.randint(0,33),None,LpInteger)
+
+x21=LpVariable("x21",random.randint(0,33),None,LpInteger)
+
+x22=LpVariable("x22",random.randint(0,33),None,LpInteger)
+
+x23=LpVariable("x23",random.randint(0,33),None,LpInteger)
+
+x31=LpVariable("x31",random.randint(0,33),None,LpInteger)
+
+x32=LpVariable("x32",random.randint(0,33),None,LpInteger)
+
+x33=LpVariable("x33",random.randint(0,33),None,LpInteger)
+
+
+#Creating variables of flow from pool to final product, with a lower limit of zero
+y11=LpVariable("y11",random.randint(0,33),None,LpInteger)
+
+y12=LpVariable("y12",random.randint(0,33),None,LpInteger)
+
+y13=LpVariable("y13",random.randint(0,33),None,LpInteger)
+
+y21=LpVariable("y21",random.randint(0,33),None,LpInteger)
+
+y22=LpVariable("y22",random.randint(0,33),None,LpInteger)
+
+y23=LpVariable("y23",random.randint(0,33),None,LpInteger)
+
+y31=LpVariable("y31",random.randint(0,33),None,LpInteger)
+
+y32=LpVariable("y32",random.randint(0,33),None,LpInteger)
+
+y33=LpVariable("y33",random.randint(0,33),None,LpInteger)
+
+######@@@@@@@@@@------------------------------------@@@@@@@@@@###########
+
+
+
+
+
+
+
+
+
+
+
+####### 1. Minimizing cost of flow from S1 ##############################
+
+#Variable to contain problem data
+prob=LpProblem("Pooling Problem", LpMinimize)
+
+#adding objective function to prob
+prob+= c1*x11+ c1*x12+ c1*x13,"flows from s1 to p1, p2 and p3"
+
+#entering constraints to prob
+prob+=x11+x12+x13 <= s1, "supply quantity of  "
+prob+=(b1-q1)*(x11+x12+x13)==0,"Mixing rule"
+
+#writing the problem in a file poolingproblem.lp
+prob.writeLP("poolingproblem.lp")
+
+#calling the solver to solve the problem
+prob.solve()
+
+#printing status
+
+for v in prob.variables():
+    print v.name,"=", v.varValue
+    
+cost1=value(prob.objective)
+print "cost of flow from Source 1:  ", cost1
+
+#######################################################################
+
+
+####### 2. Minimizing cost of flow from S2 ##############################
+
+#Variable to contain problem data
+prob=LpProblem("Pooling Problem", LpMinimize)
+
+#adding objective function to prob
+prob+= c2*x21+ c2*x22+ c2*x23,"flows from s2 to p1, p2 and p3"
+
+#entering constraints to prob
+prob+=x21+x22+x23 <= s2, "supply quantity"
+prob+=(b2-q2)*(x21+x22+x23)==0,"Mixing rule"
+
+#writing the problem in a file poolingproblem.lp
+prob.writeLP("poolingproblem.lp")
+
+#calling the solver to solve the problem
+prob.solve()
+
+#printing status
+
+for v in prob.variables():
+    print v.name,"=", v.varValue
+    
+cost2=value(prob.objective)
+print "cost of flow from Source 2:  ", cost2
+
+#######################################################################
+
+
+####### 3. Minimizing cost of flow from S3 ##############################
+
+#Variable to contain problem data
+prob=LpProblem("Pooling Problem", LpMinimize)
+
+#adding objective function to prob
+prob+= c3*x31+ c3*x32+ c3*x33,"flows from s3 to p1, p2 and p3"
+
+#entering constraints to prob
+prob+=x31+x32+x33 <= s3, "supply quantity"
+prob+=(b2-q2)*(x31+x32+x33)==0,"Mixing rule"
+
+#writing the problem in a file poolingproblem.lp
+prob.writeLP("poolingproblem.lp")
+
+#calling the solver to solve the problem
+prob.solve()
+
+#printing status
+
+for v in prob.variables():
+    print v.name,"=", v.varValue
+    
+cost3=value(prob.objective)
+print "cost of flow from Source 3:  ", cost3
+
+#######################################################################
+
+
+
